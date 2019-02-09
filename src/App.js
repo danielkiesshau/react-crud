@@ -29,6 +29,7 @@ class App extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.addTodo = this.addTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
   }
   render() {
     return (
@@ -64,12 +65,18 @@ class App extends Component {
           </button>
           <ul className="list-group">
             {
-              this.state.todos.map(({ id, name }) => (
+              this.state.todos.map(({ id, name }, index) => (
                 <li
                   key={id}
                   className="list-group-item"
                 >
                   {name}
+                  <button
+                    className="btn-sm ml-4 btn btn-danger"
+                    onClick={(index) => this.deleteTodo(index)}
+                  >
+                    X
+                  </button>
                 </li>
               ))
             }
@@ -91,6 +98,14 @@ class App extends Component {
       name: newTodo
     };
     this.setState({ ...this.state, todos: [...todos,  objTodo]});
+  }
+
+  deleteTodo(index) {
+    const { todos } = this.state;
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    this.setState({ ...this.state, todos: newTodos });
+    
   }
 }
 
