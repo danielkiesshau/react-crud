@@ -17,9 +17,16 @@ class App extends Component {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Learn React
+            CRUD React
           </a>
         </header>
+        <div className="container">
+          <h2 className="text-center p-4">Todos App</h2>
+          <ul className="list-group">
+            <li className="list-group-item">SOME LIST ITEM</li>
+            <li className="list-group-item">SOME LIST ITEM</li>
+          </ul>
+        </div>
       </div>
     );
   }
