@@ -24,12 +24,11 @@ class App extends Component {
           id: 4,
           name: 'Buy something',
         },
-      
-      ]
+      ],
+      editing: false,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.addTodo = this.addTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
+    this.setState = this.setState.bind(this);
   }
   render() {
     return (
@@ -58,28 +57,18 @@ class App extends Component {
             value={this.state.newTodo}
           />
           <button
-            className="btn-info mb-3 form-control"
+            className={this.state.editing ? "btn-warning mb-3 form-control" : "btn-info mb-3 form-control"}
             onClick={this.addTodo}
           >
-            Add Todo
+            {this.state.editing ? 'Update todo' : 'Add Todo'}
           </button>
           <ul className="list-group">
-            {
-              this.state.todos.map(({ id, name }, index) => (
-                <li
-                  key={id}
-                  className="list-group-item"
-                >
-                  {name}
-                  <button
-                    className="btn-sm ml-4 btn btn-danger"
-                    onClick={(index) => this.deleteTodo(index)}
-                  >
-                    X
-                  </button>
-                </li>
-              ))
-            }
+            <List
+              todos={this.state.todos}
+              newTodo={this.state.newTodo}
+              isVisible={!this.state.editing}
+              setState={this.setState}
+            />
           </ul>
         </div>
       </div>
@@ -90,23 +79,67 @@ class App extends Component {
     this.setState({ newTodo: event.target.value });
   }
 
+}
+
+export default App;
+
+
+class List extends React.Component {
+  constructor(props) {
+    super(props);
+    this.addTodo = this.addTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
+    this.updateTodo = this.updateTodo.bind(this);
+  }
+  render () {
+    const { todos, isVisible } = this.props;
+    if (!isVisible) return null;
+    const todosElements = todos.map(({ id, name }, index) => (
+      <li
+        key={id}
+        className="list-group-item"
+      >
+        <button
+          className="btn-sm mr-4 btn btn-warning"
+          onClick={(ev) => this.updateTodo(index)}
+        >
+          U
+        </button>
+        {name}
+        <button
+          className="btn-sm ml-4 btn btn-danger"
+          onClick={(ev) => this.deleteTodo(index)}
+        >
+          X
+        </button>
+      </li>
+    ));
+
+    return todosElements;
+  }
+  
   addTodo() {
-    const { todos, newTodo } = this.state;
+    const { todos, newTodo } = this.props;
     const id = todos.length - 1;
     const objTodo = {
       id,
       name: newTodo
     };
-    this.setState({ ...this.state, todos: [...todos,  objTodo]});
+    this.props.setState({ ...this.props, todos: [...todos,  objTodo]});
   }
 
   deleteTodo(index) {
-    const { todos } = this.state;
+    const { todos } = this.props;
     const newTodos = [...todos];
     newTodos.splice(index, 1);
-    this.setState({ ...this.state, todos: newTodos });
-    
+    this.props.setState({ ...this.props, todos: newTodos, newTodo: '', editing: false });
+  }
+  
+  updateTodo(index) {
+    const todo = this.props.todos[index];
+    this.props.setState({
+      editing: true,
+      newTodo: todo.name
+    });
   }
 }
-
-export default App;
