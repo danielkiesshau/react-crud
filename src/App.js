@@ -3,6 +3,30 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      todos: [
+        {
+          id: 1,
+          name: 'Buy some soup',
+        },
+        {
+          id: 2,
+          name: 'Buy some clothes',
+        },
+        {
+          id: 3,
+          name: 'Buy some games',
+        },
+        {
+          id: 4,
+          name: 'Buy something',
+        },
+      
+      ]
+    }
+  }
   render() {
     return (
       <div className="App">
@@ -23,8 +47,11 @@ class App extends Component {
         <div className="container">
           <h2 className="text-center p-4">Todos App</h2>
           <ul className="list-group">
-            <li className="list-group-item">SOME LIST ITEM</li>
-            <li className="list-group-item">SOME LIST ITEM</li>
+            {
+              this.state.todos.map(({ name }) => (
+                <li className="list-group-item">{name}</li>
+              ))
+            }
           </ul>
         </div>
       </div>
