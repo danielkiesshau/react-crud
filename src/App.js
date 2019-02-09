@@ -25,10 +25,12 @@ class App extends Component {
           name: 'Buy something',
         },
       ],
+      editingIndex: null,
       editing: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.setState = this.setState.bind(this);
+    this.updateTodo = this.updateTodo.bind(this);
   }
   render() {
     return (
@@ -58,15 +60,13 @@ class App extends Component {
           />
           <button
             className={this.state.editing ? "btn-warning mb-3 form-control" : "btn-info mb-3 form-control"}
-            onClick={this.addTodo}
+            onClick={this.state.editing ? this.updateTodo : this.addTodo}
           >
             {this.state.editing ? 'Update todo' : 'Add Todo'}
           </button>
           <ul className="list-group">
             <List
-              todos={this.state.todos}
-              newTodo={this.state.newTodo}
-              isVisible={!this.state.editing}
+              {...this.state}
               setState={this.setState}
             />
           </ul>
@@ -79,6 +79,14 @@ class App extends Component {
     this.setState({ newTodo: event.target.value });
   }
 
+  updateTodo(index) {
+    const { todos, editingIndex, newTodo } = this.state;
+    const updatedTodo = todos[editingIndex];
+    updatedTodo.name = newTodo;
+    const newTodos = [...todos];
+    newTodos[editingIndex] = updatedTodo;
+    this.setState({ todos: newTodos, editing: false, editingIndex: null });
+  }
 }
 
 export default App;
@@ -89,11 +97,12 @@ class List extends React.Component {
     super(props);
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
-    this.updateTodo = this.updateTodo.bind(this);
+    this.editTodo = this.editTodo.bind(this);
   }
   render () {
-    const { todos, isVisible } = this.props;
-    if (!isVisible) return null;
+    const { todos, editing } = this.props;
+    console.log('todos', todos)
+    if (editing) return null;
     const todosElements = todos.map(({ id, name }, index) => (
       <li
         key={id}
@@ -101,7 +110,7 @@ class List extends React.Component {
       >
         <button
           className="btn-sm mr-4 btn btn-warning"
-          onClick={(ev) => this.updateTodo(index)}
+          onClick={(ev) => this.editTodo(index)}
         >
           U
         </button>
@@ -135,11 +144,12 @@ class List extends React.Component {
     this.props.setState({ ...this.props, todos: newTodos, newTodo: '', editing: false });
   }
   
-  updateTodo(index) {
+  editTodo(index) {
     const todo = this.props.todos[index];
     this.props.setState({
       editing: true,
-      newTodo: todo.name
+      newTodo: todo.name,
+      editingIndex: index,
     });
   }
 }
