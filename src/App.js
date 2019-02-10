@@ -28,13 +28,16 @@ class App extends Component {
       ],
       editingIndex: null,
       editing: false,
+      notification: null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.setState = this.setState.bind(this);
     this.updateTodo = this.updateTodo.bind(this);
     this.addTodo = this.addTodo.bind(this);
     this.generateTodoId = this.generateTodoId.bind(this);
+    this.alert = this.alert.bind(this);
   }
+
   render() {
     return (
       <div className="App">
@@ -54,6 +57,9 @@ class App extends Component {
         </header>
         <div className="container">
           <h2 className="text-center p-4">Todos App</h2>
+          <Notification
+            notification={this.state.notification}
+          />
           <input
             type="text"
             name="todo"
@@ -71,6 +77,7 @@ class App extends Component {
             <List
               {...this.state}
               setState={this.setState}
+              alert={this.alert}
             />
           </ul>
         </div>
@@ -98,6 +105,7 @@ class App extends Component {
       name: newTodo
     };
     this.setState({ todos: [...todos,  objTodo] });
+    this.alert("Todo added successfully")
   }
 
   generateTodoId() {
@@ -105,6 +113,20 @@ class App extends Component {
     if (lastTodo) return lastTodo.id + 1;
     return 1;
   }
+  
+  alert(notification) {
+    this.setState({ notification });
+    setTimeout(() => this.setState({ notification: null }), 2000);
+  }
 }
 
 export default App;
+
+const Notification = ({ notification }) => {
+  if (notification === null) return null;
+  return (
+    <div className="alert alert-success">
+      <p className="text-center mt-3">{notification}</p>
+    </div>
+  );
+}

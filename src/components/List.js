@@ -34,10 +34,11 @@ export default class List extends React.Component {
   }
 
   deleteTodo(index) {
-    const { todos } = this.props;
+    const { todos, setState, alert } = this.props;
     const newTodos = [...todos];
     newTodos.splice(index, 1);
-    this.props.setState({ ...this.props, todos: newTodos, newTodo: '', editing: false });
+    setState({ ...this.props, todos: newTodos, newTodo: '', editing: false });
+    alert("Todo deleted succesfully")
   }
   
   editTodo(index) {
