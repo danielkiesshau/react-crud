@@ -31,6 +31,8 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.setState = this.setState.bind(this);
     this.updateTodo = this.updateTodo.bind(this);
+    this.addTodo = this.addTodo.bind(this);
+    this.generateTodoId = this.generateTodoId.bind(this);
   }
   render() {
     return (
@@ -87,6 +89,21 @@ class App extends Component {
     newTodos[editingIndex] = updatedTodo;
     this.setState({ todos: newTodos, editing: false, editingIndex: null });
   }
+
+  addTodo() {
+    const { todos, newTodo } = this.state;
+    const objTodo = {
+      id: this.generateTodoId(),
+      name: newTodo
+    };
+    this.setState({ todos: [...todos,  objTodo] });
+  }
+
+  generateTodoId() {
+    const lastTodo = this.state.todos[this.state.todos.length - 1];
+    if (lastTodo) return lastTodo.id + 1;
+    return 1;
+  }
 }
 
 export default App;
@@ -95,13 +112,11 @@ export default App;
 class List extends React.Component {
   constructor(props) {
     super(props);
-    this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.editTodo = this.editTodo.bind(this);
   }
   render () {
     const { todos, editing } = this.props;
-    console.log('todos', todos)
     if (editing) return null;
     const todosElements = todos.map(({ id, name }, index) => (
       <li
@@ -125,16 +140,6 @@ class List extends React.Component {
     ));
 
     return todosElements;
-  }
-  
-  addTodo() {
-    const { todos, newTodo } = this.props;
-    const id = todos.length - 1;
-    const objTodo = {
-      id,
-      name: newTodo
-    };
-    this.props.setState({ ...this.props, todos: [...todos,  objTodo]});
   }
 
   deleteTodo(index) {
