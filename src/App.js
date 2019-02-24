@@ -89,13 +89,14 @@ class App extends Component {
     this.setState({ newTodo: event.target.value });
   }
 
-  updateTodo(index) {
+  async updateTodo(index) {
     const { todos, editingIndex, newTodo } = this.state;
-    const updatedTodo = todos[editingIndex];
-    updatedTodo.name = newTodo;
+    const todo = todos[editingIndex];
+    todo.name = newTodo;
+    const response = await Axios.put(`${this.apiUrl}/todos/${todo.id}`, todo);
     const newTodos = [...todos];
-    newTodos[editingIndex] = updatedTodo;
-    this.setState({ todos: newTodos, editing: false, editingIndex: null });
+    newTodos[editingIndex] = response.data;
+    this.setState({ todos: newTodos, editing: false, editingIndex: null, newTodo: '' });
   }
 
   async addTodo() {
