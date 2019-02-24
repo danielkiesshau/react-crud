@@ -38,7 +38,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img style={{ height: 5 }} src={logo} className="App-logo" alt="logo" />
+          <img style={{ height: 100 }} src={logo} className="App-logo" alt="logo" />
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
