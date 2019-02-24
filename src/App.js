@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { List } from './components';
 import logo from './logo.svg';
 import './App.css';
+import Axios from 'axios';
 
 class App extends Component {
   constructor(props) {
@@ -9,27 +10,12 @@ class App extends Component {
     this.state = {
       newTodo: '',
       todos: [
-        {
-          id: 1,
-          name: 'Buy some soup',
-        },
-        {
-          id: 2,
-          name: 'Buy some clothes',
-        },
-        {
-          id: 3,
-          name: 'Buy some games',
-        },
-        {
-          id: 4,
-          name: 'Buy something',
-        },
       ],
       editingIndex: null,
       editing: false,
       notification: null,
     };
+    this.apiUrl = 'https://5c72bf54ba65bb0014ebf020.mockapi.io'
     this.handleChange = this.handleChange.bind(this);
     this.setState = this.setState.bind(this);
     this.updateTodo = this.updateTodo.bind(this);
@@ -37,7 +23,15 @@ class App extends Component {
     this.generateTodoId = this.generateTodoId.bind(this);
     this.alert = this.alert.bind(this);
   }
-
+  async componentWillMount(){
+    const response = await Axios.get(`${this.apiUrl}/todos`);
+    console.log(response);
+  }
+  
+  componentDidMount() {
+    
+  }
+  
   render() {
     return (
       <div className="App">
