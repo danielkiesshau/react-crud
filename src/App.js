@@ -67,12 +67,17 @@ class App extends Component {
             onChange={this.handleChange}
             value={this.state.newTodo}
           />
-          <button
-            className={this.state.editing ? "btn-warning mb-3 form-control" : "btn-info mb-3 form-control"}
-            onClick={this.state.editing ? this.updateTodo : this.addTodo}
-          >
-            {this.state.editing ? 'Update todo' : 'Add Todo'}
-          </button>
+          {
+            this.state.newTodo.length > 0 ?
+              <button
+                className={this.state.editing ? "btn-warning mb-3 form-control" : "btn-info mb-3 form-control"}
+                onClick={this.state.editing ? this.updateTodo : this.addTodo}
+              >
+                {this.state.editing ? 'Update todo' : 'Add Todo'}
+              </button>
+            :
+              null
+          }
           <ul className="list-group">
             <List
               {...this.state}
