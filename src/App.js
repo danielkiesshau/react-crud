@@ -23,13 +23,13 @@ class App extends Component {
     this.generateTodoId = this.generateTodoId.bind(this);
     this.alert = this.alert.bind(this);
   }
-  async componentWillMount(){
-    const response = await Axios.get(`${this.apiUrl}/todos`);
-    console.log(response);
+  
+  componentWillMount() {
   }
   
-  componentDidMount() {
-    
+  async componentDidMount() {
+    const response = await Axios.get(`${this.apiUrl}/todos`);
+    this.setState({ todos: response.data });
   }
   
   render() {
@@ -75,6 +75,7 @@ class App extends Component {
           <ul className="list-group">
             <List
               {...this.state}
+              apiUrl={this.apiUrl}
               setState={this.setState}
               alert={this.alert}
             />
@@ -97,13 +98,15 @@ class App extends Component {
     this.setState({ todos: newTodos, editing: false, editingIndex: null });
   }
 
-  addTodo() {
+  async addTodo() {
     const { todos, newTodo } = this.state;
     const objTodo = {
-      id: this.generateTodoId(),
       name: newTodo
     };
-    this.setState({ todos: [...todos,  objTodo] });
+
+    const response = await Axios.post(`${this.apiUrl}/todos`, objTodo)
+    // console.log(response);
+    this.setState({ todos: [...todos,  response.data] });
     this.alert("Todo added successfully")
   }
 

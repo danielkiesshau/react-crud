@@ -1,4 +1,5 @@
 import React from 'react';
+import Axios from 'axios';
 
 export default class List extends React.Component {
   constructor(props) {
@@ -33,9 +34,11 @@ export default class List extends React.Component {
     return todosElements;
   }
 
-  deleteTodo(index) {
+ async  deleteTodo(index) {
     const { todos, setState, alert } = this.props;
+    const todo = todos[index];
     const newTodos = [...todos];
+    await Axios.delete(`${this.props.apiUrl}/todos/${todo.id}`)
     newTodos.splice(index, 1);
     setState({ ...this.props, todos: newTodos, newTodo: '', editing: false });
     alert("Todo deleted succesfully")
