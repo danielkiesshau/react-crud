@@ -3,6 +3,7 @@ import { List } from './components';
 import logo from './logo.svg';
 import './App.css';
 import Axios from 'axios';
+import loadingGif from './assets/icons/loading.gif';
 
 class App extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class App extends Component {
       editingIndex: null,
       editing: false,
       notification: null,
+      loading: true,
     };
     this.apiUrl = 'https://5c72bf54ba65bb0014ebf020.mockapi.io'
     this.handleChange = this.handleChange.bind(this);
@@ -29,14 +31,14 @@ class App extends Component {
   
   async componentDidMount() {
     const response = await Axios.get(`${this.apiUrl}/todos`);
-    this.setState({ todos: response.data });
+    this.setState({ todos: response.data, loading: false });
   }
   
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img style={{ height: 5 }} src={logo} className="App-logo" alt="logo" />
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
@@ -72,14 +74,18 @@ class App extends Component {
             :
               null
           }
-          <ul className="list-group">
-            <List
-              {...this.state}
-              apiUrl={this.apiUrl}
-              setState={this.setState}
-              alert={this.alert}
-            />
-          </ul>
+          { (this.state.loading) && <img style={{ height: 150 }} src={loadingGif} /> }
+          {
+            (!this.state.loading || this.state.editing) &&
+              <ul className="list-group">
+                <List
+                  {...this.state}
+                  apiUrl={this.apiUrl}
+                  setState={this.setState}
+                  alert={this.alert}
+                />
+              </ul>
+          }
         </div>
       </div>
     );
